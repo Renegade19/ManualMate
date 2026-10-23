@@ -110,7 +110,7 @@ python3 scripts/check_docs.py
 | Участник | Роль | Зона ответственности |
 | --- | --- | --- |
 | Парахневич Алексей ([@Renegade19](https://github.com/Renegade19)) | Backend | FastAPI, контракт API, BM25-индекс и поиск, интеграция, CI |
-| Александров Георгий | LLM | Корпус и предобработка текста, prompt и выбор модели, benchmark и метрики |
-| Черников Арсений | Frontend | Сценарии, интерфейс, подключение к API, внешний вид |
+| Александров Георгий ([@AlexandrovG](https://github.com/AlexandrovG)) | LLM | Корпус и предобработка текста, prompt и выбор модели, benchmark и метрики |
+| Черников Арсений ([@arseniy9606](https://github.com/arseniy9606)) | Frontend | Сценарии, интерфейс, подключение к API, внешний вид |
 
 Задачи по участникам и контрольным точкам — [spec/team.md](spec/team.md) и [spec/plan.md](spec/plan.md).

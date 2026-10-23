@@ -7,8 +7,8 @@
 | Участник | Роль | За что отвечает | Каталоги |
 | --- | --- | --- | --- |
 | Парахневич Алексей ([@Renegade19](https://github.com/Renegade19)) | Backend | FastAPI-сервис, контракт API, собственная реализация BM25 (индекс и ранжирование), фильтр по модели автомобиля, интеграция всех частей, тесты API, CI | `backend/`, `search/index.py`, `search/bm25.py`, `scripts/`, `.github/` |
-| Александров Георгий | LLM | Сбор корпуса, извлечение текста и разбиение на фрагменты, токенизация и лемматизация, словарь синонимов, prompt, выбор модели в Ollama, benchmark и метрики Recall@k, MRR | `corpus/`, `search/preprocess.py`, `backend/llm/`, `benchmark/` |
-| Черников Арсений | Frontend | Пользовательские сценарии, интерфейс, состояния экрана, подключение к API, адаптивная вёрстка, скриншоты и демонстрация | `frontend/`, `spec/product/`, `docs/images/` |
+| Александров Георгий ([@AlexandrovG](https://github.com/AlexandrovG)) | LLM | Сбор корпуса, извлечение текста и разбиение на фрагменты, токенизация и лемматизация, словарь синонимов, prompt, выбор модели в Ollama, benchmark и метрики Recall@k, MRR | `corpus/`, `search/preprocess.py`, `backend/llm/`, `benchmark/` |
+| Черников Арсений ([@arseniy9606](https://github.com/arseniy9606)) | Frontend | Пользовательские сценарии, интерфейс, состояния экрана, подключение к API, адаптивная вёрстка, скриншоты и демонстрация | `frontend/`, `spec/product/`, `docs/images/` |
 
 ### Почему граница проходит именно так
 
