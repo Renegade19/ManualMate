@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ManualMate — справочник по обслуживанию Mercedes-Benz</title>
+  <meta name="description" content="Ответы на вопросы о техническом обслуживании Mercedes-Benz по документации владельца со ссылками на страницы.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg width="0" height="0" class="sprite" aria-hidden="true">
+    <symbol id="i-service" viewBox="0 0 24 24"><path d="M14.5 5.5a4 4 0 0 0-5.3 5.1L4 15.8 6.2 18l5.2-5.2a4 4 0 0 0 5.1-5.3l-2.4 2.4-2.1-.6-.6-2.1z"/></symbol>
+    <symbol id="i-oil" viewBox="0 0 24 24"><path d="M12 3.5c3 4 5 6.6 5 9.2a5 5 0 0 1-10 0c0-2.6 2-5.2 5-9.2z"/></symbol>
+    <symbol id="i-brakes" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.5"/><path d="M5 7.5a8.5 8.5 0 0 0 0 9M19 7.5a8.5 8.5 0 0 1 0 9"/></symbol>
+    <symbol id="i-tyres" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 4v5M12 15v5M4 12h5M15 12h5"/></symbol>
+    <symbol id="i-cooling" viewBox="0 0 24 24"><path d="M10 4v10.5a3 3 0 1 0 4 0V4a2 2 0 0 0-4 0zM14 8h3M14 11h2"/></symbol>
+    <symbol id="i-messages" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="11" rx="1"/><path d="M8 20h8M12 16v4M7.5 9h9M7.5 12h5"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <span class="wordmark">ManualMate</span>
+      <span class="topbar-sub">Справочник по техническому обслуживанию</span>
+      <span class="demo-tag" title="Поиск по документации ещё не подключён: ответы, страницы и фрагменты — примеры">Демо-версия</span>
+    </div>
+  </header>
+
+  <section class="hero" aria-labelledby="vehicle-name">
+    <div class="wrap">
+      <p class="overline">Mercedes-Benz · документация владельца</p>
+      <h1 class="display serif" id="vehicle-name">E-Класс</h1>
+      <p class="hero-meta" id="vehicle-meta"></p>
+
+      <div class="hero-controls">
+        <div class="model-tabs" id="model-tabs" role="group" aria-label="Модель"></div>
+        <label class="engine">
+          <span>Двигатель</span>
+          <select id="engine-select"></select>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <section class="search-band">
+    <div class="wrap">
+      <form class="search" id="ask-form" novalidate>
+        <label class="search-label serif" for="question">Вопрос по обслуживанию</label>
+        <div class="search-row">
+          <textarea id="question" rows="1" maxlength="500" placeholder="Например: когда менять антифриз" aria-describedby="ask-hint"></textarea>
+          <button type="submit" class="btn-dark" id="ask-submit">Найти ответ</button>
+        </div>
+        <div class="search-foot">
+          <span id="ask-hint">Enter — найти, Shift + Enter — новая строка</span>
+          <span id="ask-counter" aria-live="polite">0 / 500</span>
+        </div>
+      </form>
+
+      <div class="topics" id="topics" role="group" aria-label="Темы"></div>
+    </div>
+  </section>
+
+  <main class="wrap content">
+    <div class="result" id="result" aria-live="polite"></div>
+
+    <aside class="side">
+      <h2 class="side-title" id="topic-title">Частые вопросы</h2>
+      <ul class="side-list" id="topic-questions"></ul>
+
+      <h2 class="side-title">Документация в базе</h2>
+      <ul class="side-list docs" id="kb-list"></ul>
+      <p class="side-note">Документы собираются и проверяются. Разделы, страницы и фрагменты в ответах пока являются примерами.</p>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>ManualMate · учебный проект НИРС, МГТУ им. Н. Э. Баумана, 2026</span>
+      <span>Не является официальным сервисом Mercedes-Benz</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+.env
+.idea/
+.vscode/
+.claude/
+node_modules/
+
+# Исходные PDF руководств не публикуются в репозитории: см. corpus/README.md
+corpus/raw/
