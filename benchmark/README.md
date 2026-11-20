@@ -12,7 +12,7 @@
 python -m benchmark.run --output benchmark/reports/repeat.json
 ```
 
-Скрипт вызывает тот же `RAGService`, что и `/api/ask`. На вход генератору поступают только вопрос, модель автомобиля и выдача BM25. Поля `relevant` и `reference_answer` в prompt не передаются. Прогон сохраняет по каждому вопросу ранжированные ID, score, страницы, ответ API или ошибку и время. Отдельно фиксируются SHA-256 корпуса, вопросов и кода, базовый commit, модель и её digest, параметры BM25, температура и seed. Пока все вопросы не обработаны, `complete` равен `false`.
+Скрипт вызывает тот же `RAGService`, что и `/api/ask`. На вход генератору поступают только вопрос, модель автомобиля и выдача BM25. Поля `relevant` и `reference_answer` в prompt не передаются. Прогон сохраняет по каждому вопросу ранжированные ID, score, страницы, ответ API или ошибку и время. Отдельно фиксируются SHA-256 корпуса, вопросов и исходников Python в `backend/`, `search/`, `benchmark/`, базовый commit, модель и её digest, параметры BM25, температура и seed. Пока все вопросы не обработаны, `complete` равен `false`.
 
 Без Ollama можно проверить только поиск:
 
@@ -39,7 +39,7 @@ python -m benchmark.run --retrieval-only --output tmp/retrieval.json
 python -m benchmark.score benchmark/reports/kt2.json benchmark/reports/kt2-reviews.json
 ```
 
-Выдача и эталоны открыты для повторной проверки командой; независимое review участников не заявлено как выполненное. Итоговые значения и разбор каждого сбоя — [reports/kt2-summary.md](reports/kt2-summary.md).
+Выдача и эталоны открыты для повторной проверки командой; независимое review участников не заявлено как выполненное. Четыре значения также сохранены в [kt2-metrics.json](reports/kt2-metrics.json). Итоговые значения и разбор каждого сбоя — [reports/kt2-summary.md](reports/kt2-summary.md).
 
 ## Сравнение моделей
 

@@ -1,0 +1,10 @@
+{
+  "report": "kt2.json",
+  "report_sha256": "fa668238412be6b43b4f38ee7a852ebc2f4297654bca8fc3fe96246dc4ccc402",
+  "metrics": {
+    "Recall@5": 1.0,
+    "MRR@5": 1.0,
+    "Accuracy": 0.8,
+    "Correct Rejection Rate": 1.0
+  }
+}
