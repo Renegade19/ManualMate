@@ -1,0 +1,48 @@
+{
+  "corpus_version": "kt2-2026-11-20",
+  "catalog_url": "https://mbrus.ru/being-an-owner/catalog-of-technical-accessories/instruction-manuals",
+  "documents": [
+    {
+      "doc_id": "w205-manual",
+      "title": "Руководство по эксплуатации C-класса (W205)",
+      "doc_type": "owner_manual",
+      "models": [
+        "W205"
+      ],
+      "language": "ru",
+      "edition": "2018-09",
+      "source": "https://storage.yandexcloud.net/cars-main/ftp/998/models/a2dd7b11-7086-4ebb-ac00-c85ad150623f.pdf",
+      "file": "raw/w205-manual.pdf",
+      "sha256": "722e0d0d2aa199bf89f4f5c95ca44f0522b1154e744ebd01568b217fa5d5d544",
+      "printed_page_offset": 3
+    },
+    {
+      "doc_id": "w213-manual",
+      "title": "Руководство по эксплуатации E-класса (W213)",
+      "doc_type": "owner_manual",
+      "models": [
+        "W213"
+      ],
+      "language": "ru",
+      "edition": "2020-06",
+      "source": "https://storage.yandexcloud.net/cars-main/ftp/998/models/b9f20852-84e7-4dda-95c0-2596ba20d244.pdf",
+      "file": "raw/w213-manual.pdf",
+      "sha256": "b387f1552ef0603eac589851fc66ed32e34abf7d842291a9def5595a8c922926",
+      "printed_page_offset": 3
+    },
+    {
+      "doc_id": "x253-manual",
+      "title": "Руководство по эксплуатации GLC (X253)",
+      "doc_type": "owner_manual",
+      "models": [
+        "X253"
+      ],
+      "language": "ru",
+      "edition": "2020-03",
+      "source": "https://storage.yandexcloud.net/cars-main/ftp/998/models/f232665e-6c53-4ec1-965f-2759cc697873.pdf",
+      "file": "raw/x253-manual.pdf",
+      "sha256": "ea54c3910c41f8196954820a2476896d8e2466c942a36b9e62f9998d36acbd3c",
+      "printed_page_offset": 3
+    }
+  ]
+}

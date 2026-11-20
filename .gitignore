@@ -7,6 +7,12 @@ __pycache__/
 .vscode/
 .claude/
 node_modules/
+.tools/
+.cache/
+tmp/
+.pytest_cache/
+playwright-report/
+test-results/
 
 # Исходные PDF руководств не публикуются в репозитории: см. corpus/README.md
 corpus/raw/

@@ -1,57 +1,10 @@
 "use strict";
 
-/*
- * ManualMate — прототип интерфейса к контрольной точке 1.
- * Поиск по документации не подключён: askAssistant() возвращает демо-ответ той же
- * формы, что описана в spec/tech/api.md (POST /api/ask). Интервалы, объёмы и допуски
- * в демо-ответах намеренно не приводятся.
- */
-
+// ManualMate — интерфейс справочника. Контракт: spec/tech/api.md.
 const MAX_LENGTH = 500;
 const STORAGE_KEY = "manualmate.vehicle";
-
-// Позже загружается с GET /api/vehicles.
-const VEHICLES = [
-  {
-    model_code: "W205",
-    name: "C-Класс",
-    genitive: "C-Класса",
-    type: "Седан",
-    years: "2014–2021",
-    engines: [
-      { code: "M274", label: "M274 — бензин 1.6 / 2.0" },
-      { code: "M264", label: "M264 — бензин 1.5 / 2.0" },
-      { code: "OM651", label: "OM651 — дизель 2.1" },
-      { code: "OM654", label: "OM654 — дизель 2.0" },
-    ],
-  },
-  {
-    model_code: "W213",
-    name: "E-Класс",
-    genitive: "E-Класса",
-    type: "Седан",
-    years: "2016–2022",
-    engines: [
-      { code: "M274", label: "M274 — бензин 2.0" },
-      { code: "M264", label: "M264 — бензин 2.0" },
-      { code: "OM654", label: "OM654 — дизель 2.0" },
-      { code: "M256", label: "M256 — бензин 3.0" },
-    ],
-  },
-  {
-    model_code: "X253",
-    name: "GLC",
-    genitive: "GLC",
-    type: "Кроссовер",
-    years: "2015–2022",
-    engines: [
-      { code: "M274", label: "M274 — бензин 2.0" },
-      { code: "M264", label: "M264 — бензин 2.0" },
-      { code: "OM651", label: "OM651 — дизель 2.1" },
-      { code: "OM654", label: "OM654 — дизель 2.0" },
-    ],
-  },
-];
+const DEMO_MODE = new URLSearchParams(location.search).get("demo") === "1";
+let vehicles = [];
 
 // Быстрые темы: частые вопросы и ключевые слова для определения темы вопроса.
 const TOPICS = [
@@ -123,6 +76,7 @@ const ui = {
   topicTitle: $("topic-title"),
   topicQuestions: $("topic-questions"),
   kbList: $("kb-list"),
+  kbNote: $("kb-note"),
   form: $("ask-form"),
   question: $("question"),
   submit: $("ask-submit"),
@@ -130,7 +84,7 @@ const ui = {
   result: $("result"),
 };
 
-const state = { vehicle: null, topic: TOPICS[0], busy: false, lastQuestion: "" };
+const state = { vehicle: null, topic: TOPICS[0], ready: false, busy: false, request: null, requestId: 0 };
 
 /* ---------- DOM-помощник: весь текст выводится через textContent ---------- */
 
@@ -179,21 +133,10 @@ function saveSelection(selection) {
   }
 }
 
-/* ---------- Документы базы знаний (демо) ---------- */
-
-function documentsFor(vehicle) {
-  return [
-    { doc_id: `${vehicle.model_code.toLowerCase()}-manual`, title: `Руководство по эксплуатации ${vehicle.genitive} (${vehicle.model_code})`, scope: `${vehicle.model_code} · руководство` },
-    { doc_id: "maintenance-booklet", title: "Сервисная книжка Mercedes-Benz", scope: "все модели" },
-    { doc_id: "service-scope", title: "Объём работ сервисов A и B", scope: "все модели" },
-    { doc_id: "fluids-spec", title: "Предписания по эксплуатационным материалам", scope: "масла и жидкости" },
-  ];
-}
-
 /* ---------- Модель и двигатель ---------- */
 
 function renderModelTabs() {
-  ui.modelTabs.replaceChildren(...VEHICLES.map((v) =>
+  ui.modelTabs.replaceChildren(...vehicles.map((v) =>
     el("button", { type: "button", class: "model-tab", "data-model": v.model_code, "aria-pressed": "false", onclick: () => onModelChange(v.model_code) }, [
       v.name,
       el("small", { text: v.model_code }),
@@ -202,29 +145,40 @@ function renderModelTabs() {
 }
 
 function selectVehicle(modelCode, engineCode) {
-  const vehicle = VEHICLES.find((v) => v.model_code === modelCode) || VEHICLES[1];
-  for (const tab of ui.modelTabs.children) {
-    tab.setAttribute("aria-pressed", String(tab.dataset.model === vehicle.model_code));
-  }
-
-  ui.engine.replaceChildren(...vehicle.engines.map((e) => el("option", { value: e.code, text: e.label })));
-  const engine = vehicle.engines.find((e) => e.code === engineCode) || vehicle.engines[0];
-  ui.engine.value = engine.code;
-
-  state.vehicle = { ...vehicle, engine };
+  const vehicle = vehicles.find((v) => v.model_code === modelCode) || vehicles.find((v) => v.model_code === "W213") || vehicles[0];
+  for (const tab of ui.modelTabs.children) tab.setAttribute("aria-pressed", String(tab.dataset.model === vehicle.model_code));
+  ui.engine.replaceChildren(el("option", { value: "", text: "Не указан" }), ...vehicle.engines.map((e) => el("option", { value: e.code, text: e.label })));
+  const engine = vehicle.engines.find((e) => e.code === engineCode) || null;
+  ui.engine.value = engine?.code || "";
+  // Старый прототип использует родительный падеж и обязательный двигатель.
+  state.vehicle = { ...vehicle, engine: DEMO_MODE ? engine || vehicle.engines[0] : engine };
+  if (DEMO_MODE) ui.engine.value = state.vehicle.engine.code;
   ui.name.textContent = vehicle.name;
-  ui.meta.textContent = `${vehicle.type} · кузов ${vehicle.model_code} · ${vehicle.years}`;
+  ui.meta.textContent = `${vehicle.body} · кузов ${vehicle.model_code} · ${vehicle.years}`;
   document.title = `ManualMate — ${vehicle.name} ${vehicle.model_code}`;
+  ui.kbList.replaceChildren(...(DEMO_MODE
+    ? window.ManualMateDemo.documentsFor(vehicle).map((d) => el("li", {}, [d.title, el("span", { text: d.scope })]))
+    : [el("li", { text: vehicle.documents === undefined ? "Состав базы уточняется" : `Документов: ${vehicle.documents}` })]));
+  ui.kbNote.textContent = DEMO_MODE
+    ? "Демонстрационные данные. Разделы, страницы и фрагменты являются примерами."
+    : "Источники и фрагменты появятся под ответом. Используется издание руководства, указанное выше.";
+  saveSelection({ model_code: vehicle.model_code, engine: state.vehicle.engine?.code || "" });
+}
 
-  ui.kbList.replaceChildren(...documentsFor(vehicle).map((d) => el("li", {}, [d.title, el("span", { text: d.scope })])));
-
-  saveSelection({ model_code: vehicle.model_code, engine: engine.code });
+function cancelQuestion() {
+  state.request?.abort();
+  state.request = null;
+  state.requestId += 1;
+  state.busy = false;
+  ui.result.setAttribute("aria-busy", "false");
 }
 
 function onModelChange(modelCode) {
-  if (state.vehicle && state.vehicle.model_code === modelCode) return;
+  if (state.vehicle?.model_code === modelCode) return;
+  cancelQuestion();
   selectVehicle(modelCode);
-  if (!state.busy) renderEmpty();
+  renderEmpty();
+  updateCounter();
 }
 
 /* ---------- Темы ---------- */
@@ -255,138 +209,25 @@ function topicFor(question) {
   return TOPICS.find((t) => t.questions.includes(question)) || TOPICS.find((t) => t.match.test(q)) || null;
 }
 
-/* ---------- Демо-ответы (заменяются запросом к backend) ---------- */
+/* ---------- API и подсветка исходных терминов ---------- */
 
-const AMBIGUOUS = /(масл|жидкост|фильтр|свеч)/;
-const QUALIFIERS = /(мотор|двигател|акпп|коробк|автомат|тормоз|охлажд|антифриз|воздуш|салон|топлив|зажиган|накал)/;
-const OUT_OF_SCOPE = /(стоит|стоимост|цен[аыу]|купить|заказать|запис|дилер[а-я]* рядом|погод|страхов|штраф)/;
-
-function demoResponse(question, vehicle) {
-  const q = question.toLowerCase();
-  const docs = documentsFor(vehicle);
-
-  if (OUT_OF_SCOPE.test(q)) {
-    return {
-      status: "no_context",
-      message: "В руководстве, сервисной книжке и предписаниях по материалам нет сведений по этому вопросу. Ответ без подтверждения в документации не составляется.",
-      searched: docs.map((d) => ({ doc_id: d.doc_id, title: d.title, hits: 0 })),
-    };
-  }
-
-  if (AMBIGUOUS.test(q) && !QUALIFIERS.test(q)) {
-    return {
-      status: "clarify",
-      message: "В документации это разные разделы, и ответ зависит от узла автомобиля. Выберите, что именно вас интересует.",
-      options: q.includes("фильтр")
-        ? [
-          { label: "Масляный фильтр", question: "Когда менять масляный фильтр?" },
-          { label: "Воздушный фильтр двигателя", question: "Когда менять воздушный фильтр двигателя?" },
-          { label: "Фильтр салона", question: "Когда менять фильтр салона?" },
-        ]
-        : [
-          { label: "Моторное масло", question: "Какое моторное масло подходит для моего двигателя?" },
-          { label: "Масло в АКПП", question: "Какое масло заливается в АКПП?" },
-          { label: "Тормозная жидкость", question: "Какая тормозная жидкость нужна?" },
-        ],
-    };
-  }
-
-  const name = `${vehicle.genitive} (${vehicle.model_code}) с двигателем ${vehicle.engine.code}`;
-  const sources = [
-    {
-      n: 1, doc_id: docs[0].doc_id, title: docs[0].title,
-      section: "Техническое обслуживание · Индикация ASSYST PLUS", page: 386, score: 8.41,
-      text: "[Пример фрагмента] Система ASSYST PLUS показывает на дисплее комбинации приборов, какой сервис предстоит и через сколько дней или километров его нужно пройти. Сервис A и сервис B чередуются.",
-    },
-    {
-      n: 2, doc_id: docs[1].doc_id, title: docs[1].title,
-      section: "Порядок прохождения сервиса", page: 6, score: 6.97,
-      text: "[Пример фрагмента] Срок сервиса определяется тем условием, которое наступит раньше: пробегом или временем, указанным в сообщении ASSYST PLUS. Отметка о прохождении сервиса вносится в сервисную книжку.",
-    },
-    {
-      n: 3, doc_id: docs[2].doc_id, title: docs[2].title,
-      section: "Сервис B · Перечень работ", page: 4, score: 5.12,
-      text: "[Пример фрагмента] Сервис B включает работы сервиса A и дополнительные проверки и замены. Перечень зависит от модели, двигателя и пробега автомобиля.",
-    },
-  ];
-
-  if (/масл/.test(q) && /(мотор|двигател)/.test(q)) {
-    sources[2] = {
-      n: 3, doc_id: docs[3].doc_id, title: docs[3].title,
-      section: `Моторные масла · двигатель ${vehicle.engine.code}`, page: 12, score: 7.36,
-      text: `[Пример фрагмента] Для двигателя ${vehicle.engine.code} допускаются только моторные масла с допуском Mercedes-Benz, указанным в предписаниях по эксплуатационным материалам. Вязкость выбирается по таблице для климатических условий.`,
-    };
-    return {
-      status: "answer",
-      intro: `Для ${name} подходит только моторное масло с допуском Mercedes-Benz, предусмотренным для этого двигателя. Маркировка вязкости без допуска не гарантирует соответствия.`,
-      points: [
-        { text: "Найдите допуск для своего двигателя в предписаниях по эксплуатационным материалам и проверьте его на канистре.", citations: [3] },
-        { text: "Вязкость выбирается по таблице в зависимости от температуры окружающего воздуха.", citations: [3] },
-        { text: "Замена масла выполняется в рамках сервиса A или B по сообщению ASSYST PLUS.", citations: [1, 2] },
-      ],
-      warning: "Номер допуска, вязкость и объём не указаны, пока исходные документы не проверены.",
-      sources,
-    };
-  }
-
-  if (!/(сервис|assyst|ассист|(^|[^а-яё])то([^а-яё]|$)|обслуживан|ключ)/.test(q)) {
-    return {
-      status: "answer",
-      intro: `Так будет выглядеть ответ для ${name}. Сведения по этому вопросу появятся после подключения поиска по документации.`,
-      points: [
-        { text: "Поиск выполняется по руководству по эксплуатации, сервисной книжке и предписаниям по материалам выбранной модели.", citations: [1] },
-        { text: "Каждое утверждение в ответе сопровождается ссылкой на документ и страницу.", citations: [2] },
-        { text: "Если сведений в документации нет, справочник сообщает об этом и не составляет ответ.", citations: [3] },
-      ],
-      warning: "Источники ниже — те же примеры, что и для вопросов о сервисе A и B.",
-      sources,
-    };
-  }
-
-  return {
-    status: "answer",
-    intro: `Для ${name} сроки и объём обслуживания определяет система ASSYST PLUS: она заранее сообщает, какой сервис предстоит — A или B.`,
-    points: [
-      { text: "Проверьте сообщение ASSYST PLUS на панели приборов: там указан вид сервиса и оставшийся срок или пробег.", citations: [1] },
-      { text: "Сервис проходят по тому условию, которое наступит раньше: пробег или время.", citations: [2] },
-      { text: "Сервис B включает работы сервиса A и дополнительные позиции по документу об объёме работ.", citations: [3] },
-    ],
-    warning: "Перечень работ и интервалы не указаны, пока исходные документы не проверены.",
-    sources,
-  };
+async function askAssistant(question, vehicle, signal) {
+  if (DEMO_MODE) return window.ManualMateDemo.ask(question, vehicle);
+  return window.ManualMateAPI.ask(question, vehicle, signal);
 }
 
-/**
- * Единственная точка подключения к backend.
- * Рабочая версия: POST /api/ask { question, vehicle: { model_code, engine } }.
- */
-async function askAssistant(question, vehicle) {
-  await new Promise((resolve) => setTimeout(resolve, 1200));
-  if (new URLSearchParams(location.search).has("error")) {
-    throw new Error("service_unavailable");
-  }
-  return demoResponse(question, vehicle);
-}
-
-/* ---------- Подсветка терминов (демо: совпадение начала слова) ---------- */
-
-const STOP_WORDS = new Set(["что", "как", "какой", "какое", "какая", "какие", "для", "мой", "моего", "моей", "где", "когда", "это", "или", "на", "в", "по", "нужно", "надо"]);
-
-function queryStems(question) {
-  return question
-    .toLowerCase()
-    .split(/[^a-zа-яё0-9-]+/i)
-    .filter((w) => w.length >= 3 && !STOP_WORDS.has(w))
-    .map((w) => (w.length >= 6 ? w.slice(0, 5) : w.length >= 4 ? w.slice(0, 4) : w));
-}
-
-function highlighted(text, stems) {
+function highlighted(text, terms) {
   const p = el("p");
-  for (const part of text.split(/([a-zа-яё0-9-]+)/i)) {
-    const lower = part.toLowerCase();
-    const hit = part && stems.some((s) => lower.startsWith(s));
-    p.append(hit ? el("mark", { text: part }) : document.createTextNode(part));
+  const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const alternatives = [...new Set(terms)].sort((a, b) => b.length - a.length).map(escape);
+  if (!alternatives.length) { p.textContent = text; return p; }
+  const pattern = new RegExp(`(?<![\\p{L}\\p{N}])(?:${alternatives.join("|")})(?![\\p{L}\\p{N}])`, "giu");
+  let start = 0;
+  for (const match of text.matchAll(pattern)) {
+    p.append(document.createTextNode(text.slice(start, match.index)), el("mark", { text: match[0] }));
+    start = match.index + match[0].length;
   }
+  p.append(document.createTextNode(text.slice(start)));
   return p;
 }
 
@@ -395,7 +236,7 @@ function highlighted(text, stems) {
 function head(overline, question, opts = {}) {
   return [
     el("div", { class: "result-head" }, [
-      el("p", { class: "overline" }, [overline, opts.demo ? el("span", { class: "demo-mark", text: "Пример" }) : null]),
+      el("p", { class: "overline" }, [overline, DEMO_MODE ? el("span", { class: "demo-mark", text: "Пример" }) : null]),
       opts.reset === false ? null : el("button", { type: "button", class: "link-btn", text: "Новый вопрос", onclick: resetQuestion }),
     ]),
     el("h2", { class: "question serif", text: question }),
@@ -414,7 +255,7 @@ function renderEmpty() {
 function renderLoading(question) {
   ui.result.replaceChildren(
     el("div", {}, [
-      ...head(`Поиск по документации ${state.vehicle.genitive}`, question, { reset: false }),
+      ...head(`Поиск по документации ${state.vehicle.name}`, question, { reset: false }),
       el("div", { class: "progress", role: "progressbar", "aria-label": "Идёт поиск" }),
       el("p", { class: "progress-text", text: "Подбираем разделы руководства и сервисных документов…" }),
     ]),
@@ -441,12 +282,11 @@ function focusSource(n) {
 }
 
 function renderAnswer(question, data, topic) {
-  const stems = queryStems(question);
   const label = topic ? `${topic.title} · ответ по документации` : "Ответ по документации";
 
   ui.result.replaceChildren(
     el("article", {}, [
-      ...head(label, question, { demo: true }),
+      ...head(label, question),
       el("p", { class: "lede", text: data.intro }),
       el("ol", { class: "points" }, data.points.map((p) =>
         el("li", {}, [p.text, ...p.citations.map((n) =>
@@ -464,7 +304,7 @@ function renderAnswer(question, data, topic) {
             el("button", { type: "button", class: "link-btn", id: `fragment-btn-${s.n}`, "aria-expanded": "false", "aria-controls": `fragment-${s.n}`, text: "Показать фрагмент ▾", onclick: () => toggleFragment(s.n) }),
           ]),
           el("div", { class: "fragment", id: `fragment-${s.n}`, hidden: "" }, [
-            highlighted(s.text, stems),
+            highlighted(s.text, s.matched_terms || []),
             el("p", { class: "meta", text: `${s.title}, стр. ${s.page} · оценка BM25 ${s.score.toFixed(2)} · выделены слова запроса` }),
           ]),
         ]),
@@ -494,7 +334,7 @@ function renderNoContext(question, data) {
       el("ul", { class: "checked" }, data.searched.map((d) =>
         el("li", {}, [el("span", { text: d.title }), el("span", { text: `${d.hits} совпадений` })]),
       )),
-      el("h3", { class: "overline block-title", text: `Есть в документации · ${state.topic.title}` }),
+      el("h3", { class: "overline block-title", text: `Другие вопросы · ${state.topic.title}` }),
       el("div", { class: "options" }, state.topic.questions.slice(0, 3).map((q) =>
         el("button", { type: "button", class: "option", text: q, onclick: () => submitQuestion(q) }),
       )),
@@ -502,47 +342,60 @@ function renderNoContext(question, data) {
   );
 }
 
-function renderError(question) {
-  ui.result.replaceChildren(
-    el("div", { class: "error", role: "alert" }, [
-      ...head("Ошибка соединения", question),
-      el("p", { class: "lede", text: "Не удалось получить ответ. Проверьте подключение к серверу и попробуйте ещё раз." }),
-      el("button", { type: "button", class: "option", text: "Повторить", onclick: () => submitQuestion(question) }),
-    ]),
-  );
+const ERROR_MESSAGES = {
+  question_invalid: "Вопрос должен содержать от 1 до 500 символов. Проверьте текст и отправьте его снова.",
+  vehicle_unknown: "Выбранный автомобиль недоступен. Обновите список моделей и повторите вопрос.",
+  service_unavailable: "Сервис временно недоступен. Повторите запрос позже.",
+  invalid_response: "Сервер вернул ответ в неподдерживаемом формате. Попробуйте ещё раз.",
+  timeout: "Сервер не ответил вовремя. Попробуйте ещё раз.",
+  internal: "На сервере произошла ошибка. Попробуйте ещё раз.",
+};
+
+function renderError(question, error, catalog = false) {
+  ui.result.replaceChildren(el("div", { class: "error", role: "alert" }, [
+    ...head(catalog ? "Список автомобилей недоступен" : "Ошибка запроса", question, { reset: !catalog }),
+    el("p", { class: "lede", text: ERROR_MESSAGES[error.code || error.message] || "Не удалось соединиться с сервером. Проверьте подключение и повторите запрос." }),
+    el("button", { type: "button", class: "option", text: "Повторить", onclick: () => catalog ? loadVehicles() : submitQuestion(question) }),
+    !catalog && error.code === "vehicle_unknown" ? el("button", { type: "button", class: "option", text: "Обновить модели", onclick: loadVehicles }) : null,
+  ]));
 }
 
 /* ---------- Отправка вопроса ---------- */
 
 async function submitQuestion(raw) {
   const question = raw.trim();
-  if (!question || question.length > MAX_LENGTH || state.busy) return;
-
+  if (!question || question.length > MAX_LENGTH || state.busy || !state.ready) return;
   const topic = topicFor(question);
   if (topic && topic !== state.topic) selectTopic(topic);
-
   ui.question.value = question;
+  const request = new AbortController();
+  const id = ++state.requestId;
+  state.request = request;
   state.busy = true;
-  state.lastQuestion = question;
+  ui.result.setAttribute("aria-busy", "true");
   updateCounter();
   renderLoading(question);
-
   try {
-    const data = await askAssistant(question, state.vehicle);
+    const data = await askAssistant(question, state.vehicle, request.signal);
+    if (id !== state.requestId) return;
     if (data.status === "clarify") renderClarify(question, data);
     else if (data.status === "no_context") renderNoContext(question, data);
     else renderAnswer(question, data, topic);
-  } catch {
-    renderError(question);
+  } catch (error) {
+    if (id === state.requestId && error.name !== "AbortError") renderError(question, error);
   } finally {
-    state.busy = false;
-    updateCounter();
+    if (id === state.requestId) {
+      state.busy = false;
+      state.request = null;
+      ui.result.setAttribute("aria-busy", "false");
+      updateCounter();
+    }
   }
 }
 
 function resetQuestion() {
+  cancelQuestion();
   ui.question.value = "";
-  state.lastQuestion = "";
   updateCounter();
   renderEmpty();
   ui.question.focus();
@@ -552,26 +405,51 @@ function updateCounter() {
   const length = ui.question.value.length;
   ui.counter.textContent = `${length} / ${MAX_LENGTH}`;
   ui.counter.classList.toggle("over", length >= MAX_LENGTH);
-  ui.submit.disabled = state.busy || ui.question.value.trim() === "";
+  ui.submit.disabled = !state.ready || state.busy || length > MAX_LENGTH || ui.question.value.trim() === "";
   ui.question.style.height = "auto";
   ui.question.style.height = `${Math.min(ui.question.scrollHeight + 2, 200)}px`;
 }
 
 /* ---------- Инициализация ---------- */
 
+async function loadVehicles() {
+  cancelQuestion();
+  state.ready = false;
+  ui.engine.disabled = true;
+  ui.modelTabs.replaceChildren();
+  ui.result.replaceChildren(el("p", { class: "progress-text", text: "Загружаем список автомобилей…" }));
+  updateCounter();
+  try {
+    vehicles = DEMO_MODE ? window.ManualMateDemo.vehicles : await window.ManualMateAPI.vehicles();
+    if (!vehicles.length) {
+      ui.name.textContent = "Mercedes-Benz";
+      ui.meta.textContent = "";
+      ui.kbList.replaceChildren();
+      ui.result.replaceChildren(el("p", { text: "В базе пока нет доступных автомобилей." }));
+      return;
+    }
+    renderModelTabs();
+    const saved = loadSelection();
+    selectVehicle(saved?.model_code, saved?.engine);
+    state.ready = true;
+    ui.engine.disabled = false;
+    renderEmpty();
+  } catch (error) {
+    renderError("Не удалось загрузить автомобили", error, true);
+  } finally { updateCounter(); }
+}
+
 function init() {
-  renderModelTabs();
+  $("demo-tag").hidden = !DEMO_MODE;
   renderTopics();
-  const saved = loadSelection();
-  selectVehicle(saved && saved.model_code, saved && saved.engine);
   selectTopic(TOPICS[0]);
-
-  ui.engine.addEventListener("change", () => selectVehicle(state.vehicle.model_code, ui.engine.value));
-
-  ui.form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    submitQuestion(ui.question.value);
+  ui.engine.addEventListener("change", () => {
+    cancelQuestion();
+    selectVehicle(state.vehicle.model_code, ui.engine.value);
+    renderEmpty();
+    updateCounter();
   });
+  ui.form.addEventListener("submit", (event) => { event.preventDefault(); submitQuestion(ui.question.value); });
   ui.question.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
       event.preventDefault();
@@ -579,9 +457,7 @@ function init() {
     }
   });
   ui.question.addEventListener("input", updateCounter);
-
-  updateCounter();
-  renderEmpty();
+  loadVehicles();
 }
 
 init();

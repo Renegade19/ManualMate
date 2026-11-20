@@ -18,27 +18,79 @@
 
 | Материал | Статус |
 | --- | --- |
-| Продуктовые и технические спецификации | Подготовлены, см. [spec/](spec/) |
-| Интерфейс | Статический прототип в стиле справочника Mercedes-Benz: вкладки моделей, быстрые темы, ответ со сносками и фрагментами, уточнение, «ответ не найден», мобильная вёрстка — [frontend/](frontend/) |
-| Контракт API | Описан в [spec/tech/api.md](spec/tech/api.md); точка подключения — `askAssistant()` в `frontend/script.js` |
-| Backend, BM25, LLM | Спроектированы; реализации пока нет |
-| Корпус и benchmark | Описаны состав, формат и методика; документы ещё собираются, метрик нет |
+| SDD и интерфейс КТ1 | Сохранены; прототип доступен с явным `?demo=1` |
+| Backend | FastAPI: `/api/ask`, `/api/vehicles`, `/api/health`; также раздаёт интерфейс |
+| Поиск | Собственные инвертированный индекс и BM25, лемматизация, синонимы, фильтр модели, JSON-кэш |
+| LLM | Локальная Ollama, ответ по найденным карточкам, проверка сносок и чисел, отказ при отсутствии сведений |
+| Корпус | 30 коротких адаптированных документов D01–D30 по трём русским руководствам; страницы и SHA-256 PDF проверяются скриптом |
+| Benchmark | 10 обычных вопросов с ≥3 релевантными документами и эталонами, 5 ловушек; сохранённые прогоны и разбор — [benchmark/](benchmark/) |
+| Проверки | Unit-тесты, API, браузерные сценарии 1440/390 px и CI; отчёт — [КТ2](docs/checkpoint-2.md) |
 
-Все ответы в прототипе — демонстрационные. Они помечены в интерфейсе и не являются работой RAG.
+Корпус КТ2 охватывает отдельные вопросы ASSYST PLUS, моторного масла, давления шин и проверки охлаждающей жидкости. Это 30 индексируемых карточек из трёх PDF, не 30 полных руководств. В нём пока нет полного состава сервисов A/B, допусков по двигателям и всех интервалов ТО. На такие вопросы система должна отказать. Вкладки показывают издание руководства, к которому относится ответ; двигатель пока не указан.
+
+## Запуск системы
+
+Нужны Python 3.11+ и [Ollama](https://ollama.com/download). Команды выполняются из корня репозитория. Модель `qwen2.5:7b` занимает около 4,7 ГБ; для проверки использован компьютер с 16 ГБ памяти.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+ollama pull qwen2.5:7b
+```
+
+Запустите Ollama (приложение либо `ollama serve` в отдельном терминале), затем:
+
+```bash
+python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
+```
+
+Откройте <http://127.0.0.1:8000>. Готовые карточки уже в Git; скачивать PDF и собирать индекс вручную для первого запуска не нужно. Индекс появится в `.cache/index.json` и пересоберётся при изменении корпуса. Готовность проверяется по <http://127.0.0.1:8000/api/health>, контракт можно открыть в <http://127.0.0.1:8000/docs>.
+
+Проверочный вопрос: «Где находится таблица рекомендованного давления шин?» → ответ, источник и раскрываемый фрагмент. Затем: «Сколько стоит ТО у дилера?» → отказ, «Какое масло?» → уточнение.
+
+| Переменная backend | По умолчанию |
+| --- | --- |
+| `OLLAMA_URL` | `http://127.0.0.1:11434` |
+| `OLLAMA_MODEL` | `qwen2.5:7b` |
+| `LLM_TIMEOUT` | 120 секунд |
+| `TOP_K`, `BM25_K1`, `BM25_B` | 5, 1.2, 0.75 |
+| `BM25_MIN_SCORE` | 0.5, исходный порог без оптимизации на итоговом наборе |
+| `FRONTEND_ORIGINS` | `http://localhost:8080,http://127.0.0.1:8080` для отдельного frontend |
+
+Если Ollama или модель недоступна, вопросы с найденным контекстом возвращают 503 с возможностью повтора. Демо автоматически не включается. Не запускайте `--reload` при измерении времени benchmark.
 
 ## Запуск прототипа
 
-Зависимости не нужны. Откройте `frontend/index.html` в браузере или поднимите локальный сервер:
+Демо КТ1 можно открыть без Python-зависимостей и Ollama:
 
 ```bash
 python3 -m http.server 8080 --directory frontend
 ```
 
-Затем откройте http://localhost:8080. Чтобы посмотреть состояние «ошибка сервера», откройте http://localhost:8080/?error=1.
+Адрес: <http://localhost:8080/?demo=1>, ошибка: <http://localhost:8080/?demo=1&error=1>. Ответы и страницы в этом режиме — примеры, это видно в интерфейсе. Отдельный frontend с настоящим API настраивается через `frontend/config.js`, см. [frontend/README.md](frontend/README.md).
 
-| Начальный экран | Уточнение | Нет данных | Телефон |
-| --- | --- | --- | --- |
-| ![Начальный экран](docs/images/welcome.jpg) | ![Уточнение](docs/images/clarify.jpg) | ![Нет данных](docs/images/no-context.jpg) | ![Телефон](docs/images/mobile-answer.jpg) |
+## Повтор проверки КТ2
+
+```bash
+python3 scripts/check_docs.py
+python -m pytest -q
+python scripts/prepare_corpus.py --download
+python -m benchmark.run --output benchmark/reports/repeat.json
+python -m benchmark.score benchmark/reports/kt2.json benchmark/reports/kt2-reviews.json
+```
+
+Последняя команда пересчитывает четыре метрики **сохранённого** прогона. Новый прогон требует новой оценки ответов; оценки связаны с конкретным JSON через SHA-256 и не переносятся автоматически. Поиск можно проверить без Ollama: `python -m benchmark.run --retrieval-only --output tmp/retrieval.json`. Полная методика и разбор ошибок — [benchmark/README.md](benchmark/README.md), [spec/tech/testing.md](spec/tech/testing.md).
+
+Браузерная проверка (Node.js 20+, pnpm):
+
+```bash
+corepack pnpm install --frozen-lockfile
+corepack pnpm exec playwright install chromium
+PYTHON=python corepack pnpm test:frontend
+```
+
+Подробности, в том числе проверка с настоящей LLM: [frontend/README.md](frontend/README.md).
 
 ## Архитектура рабочей версии
 
@@ -70,11 +122,11 @@ flowchart LR
 ├── AGENTS.md               правила для кодингового агента
 ├── CONTRIBUTING.md         ветки, Pull Request, review
 ├── CHANGE_HISTORY.md       журнал значимых изменений
-├── frontend/               прототип интерфейса
-├── backend/                будущий FastAPI-сервис
-├── search/                 будущий BM25: токенизатор, индекс, ранжирование
-├── corpus/                 состав и формат корпуса
-├── benchmark/              формат тестовых запросов и пример
+├── frontend/               интерфейс, API-клиент и отдельное демо
+├── backend/                FastAPI-сервис и клиент Ollama
+├── search/                 токенизатор, индекс, собственный BM25
+├── corpus/                 30 карточек, выборка и manifest источников
+├── benchmark/              15 вопросов, запуск, метрики, отчёты
 ├── spec/
 │   ├── product/            продукт, сценарии, интерфейс
 │   ├── tech/               архитектура, API, RAG, способ проверки
@@ -95,6 +147,7 @@ flowchart LR
 | Продукт | [Продукт](spec/product/product.md) · [Сценарии](spec/product/scenarios.md) · [Интерфейс](spec/product/interface.md) |
 | Техника | [Архитектура](spec/tech/architecture.md) · [API](spec/tech/api.md) · [RAG и BM25](spec/tech/rag.md) · [Способ проверки](spec/tech/testing.md) |
 | Организация | [Команда](spec/team.md) · [План](spec/plan.md) · [Решения](spec/decisions.md) · [Правила работы](CONTRIBUTING.md) · [Правила для агента](AGENTS.md) |
+| Контрольная точка 2 | [Результат и сценарий проверки](docs/checkpoint-2.md) · [Benchmark](benchmark/README.md) |
 | Контрольная точка 1 | [Чек-лист](docs/checkpoint-1.md) · [Сценарий показа](docs/demo-script.md) · [Проверка](docs/verification.md) · [Источники](docs/sources.md) |
 
 ## Проверка документации

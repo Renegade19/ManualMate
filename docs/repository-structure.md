@@ -5,18 +5,18 @@
 | Путь | Содержимое | Ведущий |
 | --- | --- | --- |
 | `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, `CHANGE_HISTORY.md` | Описание и запуск, правила для агента, правила работы, журнал изменений | Все |
-| `frontend/` | Прототип интерфейса: `index.html`, `styles.css`, `script.js` | Frontend |
+| `frontend/` | Статический интерфейс, `api.js`, `config.js`, отдельное `demo.js` | Frontend |
 | `spec/product/` | Продукт, сценарии, интерфейс | Frontend |
 | `spec/tech/` | Архитектура, API, RAG, способ проверки | Backend, LLM |
 | `spec/team.md`, `spec/plan.md`, `spec/decisions.md` | Команда и задачи, план, журнал решений | Все |
 | `docs/` | Чек-лист точки, сценарий показа, источники, отчёт проверки | Все |
 | `docs/images/` | Скриншоты интерфейса | Frontend |
-| `backend/`, `search/` | README с границами будущей реализации | Backend, LLM |
-| `corpus/`, `benchmark/` | Формат данных и пример запросов | LLM |
+| `backend/`, `search/` | Реализация API, LLM, индекса, BM25 и тесты | Backend, LLM |
+| `corpus/`, `benchmark/` | Корпус 30 карточек, 15 вопросов, прогоны и метрики | LLM |
 | `scripts/check_docs.py` | Проверка обязательных файлов, ссылок и примера benchmark | Backend |
 | `.github/` | Workflow проверки и шаблон Pull Request | Backend |
 
-## При реализации
+## Реализация КТ2
 
 ```text
 backend/
@@ -34,8 +34,9 @@ corpus/
 ├── processed/          фрагменты в JSONL
 └── manifest.json
 benchmark/
-├── queries.jsonl       dev и holdout
-├── run.py              расчёт Recall@k и MRR
+├── queries.jsonl       10 вопросов и 5 ловушек КТ2
+├── run.py              полный прогон поиска и LLM
+├── score.py            четыре метрики по сохранённым результатам
 └── reports/            результаты прогонов
 ```
 
