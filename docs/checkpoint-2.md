@@ -43,7 +43,7 @@
 | Настоящий запрос в браузере | PASS: HTTP → BM25 → Ollama 7B → ответ со сноской; вместе с контрактными проверками 14 групп |
 | Benchmark 7B | PASS: все 15 вопросов, ошибок сервиса нет; Recall@5 = 1.00, MRR@5 = 1.00, Accuracy = 0.80, Correct Rejection Rate = 1.00 |
 | Сравнение 3B | Тот же корпус, вопросы, код RAG и параметры; Accuracy = 0.30, корректные отказы = 1.00; сохранены все ответы и оценки |
-| GitHub Actions | [Актуальный статус workflow](https://github.com/Renegade19/ManualMate/actions/workflows/docs-check.yml); локальные проверки повторяются после push |
+| GitHub Actions | [Актуальный статус workflow](https://github.com/Renegade19/ManualMate/actions/workflows/docs-check.yml); активный workflow проверяет документацию и синтаксис JavaScript |
 
 [Скриншот 1440 px](images/kt2-live-desktop.png) · [Скриншот 390 px](images/kt2-live-mobile.png). На них настоящий ответ Ollama, не тестовая подмена. Метрики, два неполных ответа 7B и ограничения разобраны в [отчёте](../benchmark/reports/kt2-summary.md). Проверки КТ1 сохранены в [verification.md](verification.md).
 
@@ -54,3 +54,5 @@
 - Согласовать с преподавателем k = 5 и глубину MRR = 5.
 - Команде перепроверить карточки, эталоны и оценки ответов. Независимый review другим участником не отмечен как пройденный.
 - Корпус не содержит полного состава сервисов A/B, допусков конкретных двигателей и универсальных интервалов ТО. По отсутствующим сведениям ожидается отказ.
+
+Расширенный workflow подготовлен в [ci-checks.example.yml](ci-checks.example.yml). Он не активирован: текущий OAuth-доступ GitHub не разрешает обновлять workflow. Unit-тесты и браузерные проверки выполнены локально по приведённым командам.

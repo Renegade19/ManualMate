@@ -90,7 +90,7 @@ corepack pnpm exec playwright install chromium
 PYTHON=python corepack pnpm test:frontend
 ```
 
-Подробности, в том числе проверка с настоящей LLM: [frontend/README.md](frontend/README.md).
+Подробности, в том числе проверка с настоящей LLM: [frontend/README.md](frontend/README.md). Действующий GitHub Actions проверяет документацию и синтаксис JavaScript. Полный workflow с unit-тестами и браузером подготовлен в [docs/ci-checks.example.yml](docs/ci-checks.example.yml); его активация требует GitHub-доступа с правом `workflow`.
 
 ## Архитектура рабочей версии
 
