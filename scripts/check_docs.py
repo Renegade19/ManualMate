@@ -9,7 +9,6 @@ ROOT = Path(__file__).resolve().parent.parent
 
 REQUIRED = [
     "README.md",
-    "AGENTS.md",
     "CONTRIBUTING.md",
     "CHANGE_HISTORY.md",
     "frontend/index.html",

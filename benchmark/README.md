@@ -37,7 +37,7 @@ python -m benchmark.score benchmark/results/kt2.json benchmark/results/kt2-revie
 | Accuracy | 0.80 |
 | Correct Rejection Rate | 1.00 |
 
-[Полный прогон](results/kt2.json) · [Оценки](results/kt2-reviews.json) · [Метрики](results/kt2-metrics.json)
+Результаты: `kt2.json`, `kt2-reviews.json`, `kt2-metrics.json`.
 
 ## Разбор ошибок
 
