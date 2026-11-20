@@ -1,6 +1,0 @@
-{
-  "name": "manualmate-checks",
-  "private": true,
-  "scripts": { "test:frontend": "node scripts/check_frontend.cjs" },
-  "devDependencies": { "playwright": "1.62.1" }
-}

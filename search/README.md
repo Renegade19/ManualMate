@@ -10,4 +10,4 @@
 
 Начальные параметры: k1 = 1.2, b = 0.75, k = 5. Кэш `.cache/index.json` не публикуется. После изменения корпуса он пересобирается при старте сервиса. Пустой запрос и отсутствие совпадений дают пустую выдачу. Индекс не знает эталоны benchmark.
 
-Тесты: `python -m pytest search/tests`. Формула и ограничения — [rag.md](../spec/tech/rag.md), полный запуск — [README](../README.md).
+Тесты: `python -m pytest tests/test_search.py`. Формула и ограничения — [rag.md](../spec/tech/rag.md), полный запуск — [README](../README.md).

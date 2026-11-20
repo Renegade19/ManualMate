@@ -15,19 +15,6 @@
 | 05. Структура репозитория | [repository-structure.md](repository-structure.md) | Backend | Показать дерево в GitHub |
 | 06. Распределение работы | [team.md](../spec/team.md), [plan.md](../spec/plan.md) | Все | Каждый объясняет свою роль и задачи на точку 2 |
 | README и инструкция запуска | [README](../README.md#запуск-прототипа) | Backend | Коллега запускает по инструкции |
-| Документы SDD | [AGENTS.md](../AGENTS.md), [CONTRIBUTING.md](../CONTRIBUTING.md), [spec/](../spec/) | Backend | Порядок «спецификация → код → проверка» |
+| Документы SDD | [CONTRIBUTING.md](../CONTRIBUTING.md), [spec/](../spec/) | Backend | Порядок «спецификация → код → проверка» |
 | Файлы интерфейса | [frontend/](../frontend/) | Frontend | `index.html`, `styles.css`, `script.js` |
 | История изменений в Git | Коммиты, Pull Request, [CHANGE_HISTORY](../CHANGE_HISTORY.md) | Все | История в GitHub |
-
-## Чек-лист перед показом
-
-- [x] Имена, роли и GitHub-логины участников вписаны в [team.md](../spec/team.md) и README.
-- [x] Участники добавлены в соавторы репозитория на GitHub.
-- [ ] Команда прочитала и приняла спецификации и API.
-- [ ] Каждый участник закоммитил свою часть из своей учётной записи GitHub.
-- [ ] Изменения влиты в `main` через Pull Request.
-- [ ] `python3 scripts/check_docs.py` проходит, workflow в GitHub Actions зелёный.
-- [ ] Прототип открывается по README, сценарии S01–S05, S07–S09 пройдены.
-- [ ] Каждый может объяснить путь запроса: интерфейс → backend → BM25 → LLM → ответ с источником.
-- [ ] Найден хотя бы один русский PDF руководства, статус обновлён в [sources.md](sources.md).
-- [ ] У преподавателя есть доступ к репозиторию.
