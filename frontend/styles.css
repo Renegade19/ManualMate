@@ -335,7 +335,7 @@ mark { background: var(--mark); color: inherit; padding: 0 1px; }
   .engine select { flex: 1; }
   .search-label { font-size: 23px; }
   .search-row { flex-direction: column; }
-  .search-row textarea { border-right: 1px solid var(--line-strong); }
+  .search-row textarea { flex: none; border-right: 1px solid var(--line-strong); }
   .topic { flex-basis: 132px; }
   .question { font-size: 32px; }
   .source-row { grid-template-columns: 22px minmax(0, 1fr); row-gap: 4px; align-items: start; }

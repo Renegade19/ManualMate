@@ -68,6 +68,7 @@ async function main() {
     fs.mkdirSync(output, { recursive: true });
     await page.screenshot({ path: path.join(output, "kt2-contract-desktop.png"), fullPage: true });
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: path.join(output, "kt2-contract-mobile.png"), fullPage: true });
     check("1440 и 390 px, без горизонтальной прокрутки");
@@ -178,9 +179,16 @@ async function main() {
       await submit("Где находится таблица рекомендованного давления шин?");
       assert.equal(await result.locator(".sources").count(), 1);
       await result.locator(".cite").first().click();
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
       await page.screenshot({ path: path.join(root, "docs/images/kt2-live-desktop.png"), fullPage: true });
       await page.setViewportSize({ width: 390, height: 844 });
+      await page.waitForFunction(() => {
+        const field = document.getElementById("question");
+        return field.scrollHeight <= field.clientHeight + 1;
+      });
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      assert.equal(await question.evaluate((el) => el.scrollHeight <= el.clientHeight + 1), true);
       await page.screenshot({ path: path.join(root, "docs/images/kt2-live-mobile.png"), fullPage: true });
       check("настоящий HTTP → BM25 → Ollama → ответ в браузере");
     }

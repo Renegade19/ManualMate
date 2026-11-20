@@ -332,7 +332,7 @@ function renderNoContext(question, data) {
       el("p", { class: "lede", text: data.message }),
       el("h3", { class: "overline block-title", text: "Проверенные документы" }),
       el("ul", { class: "checked" }, data.searched.map((d) =>
-        el("li", {}, [el("span", { text: d.title }), el("span", { text: `${d.hits} совпадений` })]),
+        el("li", {}, [el("span", { text: d.title }), el("span", { text: `В выдаче: ${d.hits}` })]),
       )),
       el("h3", { class: "overline block-title", text: `Другие вопросы · ${state.topic.title}` }),
       el("div", { class: "options" }, state.topic.questions.slice(0, 3).map((q) =>
@@ -457,6 +457,7 @@ function init() {
     }
   });
   ui.question.addEventListener("input", updateCounter);
+  window.addEventListener("resize", updateCounter);
   loadVehicles();
 }
 
