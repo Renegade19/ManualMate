@@ -9,7 +9,6 @@ ROOT = Path(__file__).resolve().parent.parent
 
 REQUIRED = [
     "README.md",
-    "AGENTS.md",
     "CONTRIBUTING.md",
     "CHANGE_HISTORY.md",
     "frontend/index.html",
@@ -37,10 +36,13 @@ REQUIRED = [
     "corpus/README.md",
     "benchmark/README.md",
     "benchmark/questions.example.jsonl",
-    "benchmark/queries.jsonl",
+    "benchmark/questions.jsonl",
     "corpus/manifest.json",
     "corpus/selection.json",
-    "corpus/processed/documents.jsonl",
+    "corpus/processed/D01.jsonl",
+    "corpus/processed/D30.jsonl",
+    "tests/test_api.py",
+    "tests/test_search.py",
     "backend/app.py",
     "search/bm25.py",
     "docs/checkpoint-2.md",
@@ -102,10 +104,12 @@ def check_benchmark(errors):
 
 def check_checkpoint_data(errors):
     try:
-        documents = [json.loads(line) for line in (ROOT / "corpus/processed/documents.jsonl").read_text().splitlines() if line.strip()]
-        questions = [json.loads(line) for line in (ROOT / "benchmark/queries.jsonl").read_text().splitlines() if line.strip()]
+        documents = [json.loads(line) for path in sorted((ROOT / "corpus/processed").glob("D[0-9][0-9].jsonl")) for line in path.read_text().splitlines() if line.strip()]
+        questions = [json.loads(line) for line in (ROOT / "benchmark/questions.jsonl").read_text().splitlines() if line.strip()]
         manifest = json.loads((ROOT / "corpus/manifest.json").read_text())
-        sources = {d["doc_id"] for d in manifest["documents"]}
+        sources = {d["source_id"] for d in manifest["sources"]}
+        if len(manifest["documents"]) != 30:
+            errors.append("КТ2: manifest должен содержать 30 документов")
         ids = {d["doc_id"] for d in documents}
         if len(documents) != 30 or ids != {f"D{n:02d}" for n in range(1, 31)}:
             errors.append("КТ2: нужно ровно 30 уникальных документов D01–D30")

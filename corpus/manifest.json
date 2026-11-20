@@ -3,7 +3,398 @@
   "catalog_url": "https://mbrus.ru/being-an-owner/catalog-of-technical-accessories/instruction-manuals",
   "documents": [
     {
-      "doc_id": "w205-manual",
+      "doc_id": "D01",
+      "source_id": "w205-manual",
+      "section": "ASSYST PLUS: срок ТО",
+      "models": [
+        "W205"
+      ],
+      "page": 402,
+      "pdf_page": 405,
+      "adapted": true,
+      "title": "ASSYST PLUS: срок ТО",
+      "file": "processed/D01.jsonl"
+    },
+    {
+      "doc_id": "D02",
+      "source_id": "w205-manual",
+      "section": "ASSYST PLUS: тяжёлые условия",
+      "models": [
+        "W205"
+      ],
+      "page": 403,
+      "pdf_page": 406,
+      "adapted": true,
+      "title": "ASSYST PLUS: тяжёлые условия",
+      "file": "processed/D02.jsonl"
+    },
+    {
+      "doc_id": "D03",
+      "source_id": "w205-manual",
+      "section": "ASSYST PLUS: отключённая батарея",
+      "models": [
+        "W205"
+      ],
+      "page": 403,
+      "pdf_page": 406,
+      "adapted": true,
+      "title": "ASSYST PLUS: отключённая батарея",
+      "file": "processed/D03.jsonl"
+    },
+    {
+      "doc_id": "D04",
+      "source_id": "w205-manual",
+      "section": "Моторное масло: электронное измерение",
+      "models": [
+        "W205"
+      ],
+      "page": 407,
+      "pdf_page": 410,
+      "adapted": true,
+      "title": "Моторное масло: электронное измерение",
+      "file": "processed/D04.jsonl"
+    },
+    {
+      "doc_id": "D05",
+      "source_id": "w205-manual",
+      "section": "Моторное масло: безопасный долив",
+      "models": [
+        "W205"
+      ],
+      "page": 407,
+      "pdf_page": 410,
+      "adapted": true,
+      "title": "Моторное масло: безопасный долив",
+      "file": "processed/D05.jsonl"
+    },
+    {
+      "doc_id": "D06",
+      "source_id": "w205-manual",
+      "section": "Моторное масло: присадки и перелив",
+      "models": [
+        "W205"
+      ],
+      "page": 408,
+      "pdf_page": 411,
+      "adapted": true,
+      "title": "Моторное масло: присадки и перелив",
+      "file": "processed/D06.jsonl"
+    },
+    {
+      "doc_id": "D07",
+      "source_id": "w205-manual",
+      "section": "Шины: таблица давления",
+      "models": [
+        "W205"
+      ],
+      "page": 448,
+      "pdf_page": 451,
+      "adapted": true,
+      "title": "Шины: таблица давления",
+      "file": "processed/D07.jsonl"
+    },
+    {
+      "doc_id": "D08",
+      "source_id": "w205-manual",
+      "section": "Шины: холодные колёса",
+      "models": [
+        "W205"
+      ],
+      "page": 448,
+      "pdf_page": 451,
+      "adapted": true,
+      "title": "Шины: холодные колёса",
+      "file": "processed/D08.jsonl"
+    },
+    {
+      "doc_id": "D09",
+      "source_id": "w205-manual",
+      "section": "Шины: перезапуск контроля давления",
+      "models": [
+        "W205"
+      ],
+      "page": 450,
+      "pdf_page": 453,
+      "adapted": true,
+      "title": "Шины: перезапуск контроля давления",
+      "file": "processed/D09.jsonl"
+    },
+    {
+      "doc_id": "D10",
+      "source_id": "w205-manual",
+      "section": "Охлаждающая жидкость: проверка",
+      "models": [
+        "W205"
+      ],
+      "page": 409,
+      "pdf_page": 412,
+      "adapted": true,
+      "title": "Охлаждающая жидкость: проверка",
+      "file": "processed/D10.jsonl"
+    },
+    {
+      "doc_id": "D11",
+      "source_id": "w213-manual",
+      "section": "ASSYST PLUS: срок ТО",
+      "models": [
+        "W213"
+      ],
+      "page": 303,
+      "pdf_page": 306,
+      "adapted": true,
+      "title": "ASSYST PLUS: срок ТО",
+      "file": "processed/D11.jsonl"
+    },
+    {
+      "doc_id": "D12",
+      "source_id": "w213-manual",
+      "section": "ASSYST PLUS: тяжёлые условия",
+      "models": [
+        "W213"
+      ],
+      "page": 303,
+      "pdf_page": 306,
+      "adapted": true,
+      "title": "ASSYST PLUS: тяжёлые условия",
+      "file": "processed/D12.jsonl"
+    },
+    {
+      "doc_id": "D13",
+      "source_id": "w213-manual",
+      "section": "ASSYST PLUS: отключённая батарея",
+      "models": [
+        "W213"
+      ],
+      "page": 304,
+      "pdf_page": 307,
+      "adapted": true,
+      "title": "ASSYST PLUS: отключённая батарея",
+      "file": "processed/D13.jsonl"
+    },
+    {
+      "doc_id": "D14",
+      "source_id": "w213-manual",
+      "section": "Моторное масло: электронное измерение",
+      "models": [
+        "W213"
+      ],
+      "page": 307,
+      "pdf_page": 310,
+      "adapted": true,
+      "title": "Моторное масло: электронное измерение",
+      "file": "processed/D14.jsonl"
+    },
+    {
+      "doc_id": "D15",
+      "source_id": "w213-manual",
+      "section": "Моторное масло: безопасный долив",
+      "models": [
+        "W213"
+      ],
+      "page": 308,
+      "pdf_page": 311,
+      "adapted": true,
+      "title": "Моторное масло: безопасный долив",
+      "file": "processed/D15.jsonl"
+    },
+    {
+      "doc_id": "D16",
+      "source_id": "w213-manual",
+      "section": "Моторное масло: присадки и перелив",
+      "models": [
+        "W213"
+      ],
+      "page": 309,
+      "pdf_page": 312,
+      "adapted": true,
+      "title": "Моторное масло: присадки и перелив",
+      "file": "processed/D16.jsonl"
+    },
+    {
+      "doc_id": "D17",
+      "source_id": "w213-manual",
+      "section": "Шины: таблица давления",
+      "models": [
+        "W213"
+      ],
+      "page": 342,
+      "pdf_page": 345,
+      "adapted": true,
+      "title": "Шины: таблица давления",
+      "file": "processed/D17.jsonl"
+    },
+    {
+      "doc_id": "D18",
+      "source_id": "w213-manual",
+      "section": "Шины: холодные колёса",
+      "models": [
+        "W213"
+      ],
+      "page": 342,
+      "pdf_page": 345,
+      "adapted": true,
+      "title": "Шины: холодные колёса",
+      "file": "processed/D18.jsonl"
+    },
+    {
+      "doc_id": "D19",
+      "source_id": "w213-manual",
+      "section": "Шины: перезапуск контроля давления",
+      "models": [
+        "W213"
+      ],
+      "page": 344,
+      "pdf_page": 347,
+      "adapted": true,
+      "title": "Шины: перезапуск контроля давления",
+      "file": "processed/D19.jsonl"
+    },
+    {
+      "doc_id": "D20",
+      "source_id": "w213-manual",
+      "section": "Охлаждающая жидкость: проверка",
+      "models": [
+        "W213"
+      ],
+      "page": 309,
+      "pdf_page": 312,
+      "adapted": true,
+      "title": "Охлаждающая жидкость: проверка",
+      "file": "processed/D20.jsonl"
+    },
+    {
+      "doc_id": "D21",
+      "source_id": "x253-manual",
+      "section": "ASSYST PLUS: срок ТО",
+      "models": [
+        "X253"
+      ],
+      "page": 308,
+      "pdf_page": 311,
+      "adapted": true,
+      "title": "ASSYST PLUS: срок ТО",
+      "file": "processed/D21.jsonl"
+    },
+    {
+      "doc_id": "D22",
+      "source_id": "x253-manual",
+      "section": "ASSYST PLUS: тяжёлые условия",
+      "models": [
+        "X253"
+      ],
+      "page": 308,
+      "pdf_page": 311,
+      "adapted": true,
+      "title": "ASSYST PLUS: тяжёлые условия",
+      "file": "processed/D22.jsonl"
+    },
+    {
+      "doc_id": "D23",
+      "source_id": "x253-manual",
+      "section": "ASSYST PLUS: отключённая батарея",
+      "models": [
+        "X253"
+      ],
+      "page": 309,
+      "pdf_page": 312,
+      "adapted": true,
+      "title": "ASSYST PLUS: отключённая батарея",
+      "file": "processed/D23.jsonl"
+    },
+    {
+      "doc_id": "D24",
+      "source_id": "x253-manual",
+      "section": "Моторное масло: электронное измерение",
+      "models": [
+        "X253"
+      ],
+      "page": 312,
+      "pdf_page": 315,
+      "adapted": true,
+      "title": "Моторное масло: электронное измерение",
+      "file": "processed/D24.jsonl"
+    },
+    {
+      "doc_id": "D25",
+      "source_id": "x253-manual",
+      "section": "Моторное масло: безопасный долив",
+      "models": [
+        "X253"
+      ],
+      "page": 313,
+      "pdf_page": 316,
+      "adapted": true,
+      "title": "Моторное масло: безопасный долив",
+      "file": "processed/D25.jsonl"
+    },
+    {
+      "doc_id": "D26",
+      "source_id": "x253-manual",
+      "section": "Моторное масло: присадки и перелив",
+      "models": [
+        "X253"
+      ],
+      "page": 314,
+      "pdf_page": 317,
+      "adapted": true,
+      "title": "Моторное масло: присадки и перелив",
+      "file": "processed/D26.jsonl"
+    },
+    {
+      "doc_id": "D27",
+      "source_id": "x253-manual",
+      "section": "Шины: таблица давления",
+      "models": [
+        "X253"
+      ],
+      "page": 347,
+      "pdf_page": 350,
+      "adapted": true,
+      "title": "Шины: таблица давления",
+      "file": "processed/D27.jsonl"
+    },
+    {
+      "doc_id": "D28",
+      "source_id": "x253-manual",
+      "section": "Шины: холодные колёса",
+      "models": [
+        "X253"
+      ],
+      "page": 347,
+      "pdf_page": 350,
+      "adapted": true,
+      "title": "Шины: холодные колёса",
+      "file": "processed/D28.jsonl"
+    },
+    {
+      "doc_id": "D29",
+      "source_id": "x253-manual",
+      "section": "Шины: перезапуск контроля давления",
+      "models": [
+        "X253"
+      ],
+      "page": 349,
+      "pdf_page": 352,
+      "adapted": true,
+      "title": "Шины: перезапуск контроля давления",
+      "file": "processed/D29.jsonl"
+    },
+    {
+      "doc_id": "D30",
+      "source_id": "x253-manual",
+      "section": "Охлаждающая жидкость: проверка",
+      "models": [
+        "X253"
+      ],
+      "page": 314,
+      "pdf_page": 317,
+      "adapted": true,
+      "title": "Охлаждающая жидкость: проверка",
+      "file": "processed/D30.jsonl"
+    }
+  ],
+  "sources": [
+    {
       "title": "Руководство по эксплуатации C-класса (W205)",
       "doc_type": "owner_manual",
       "models": [
@@ -14,10 +405,10 @@
       "source": "https://storage.yandexcloud.net/cars-main/ftp/998/models/a2dd7b11-7086-4ebb-ac00-c85ad150623f.pdf",
       "file": "raw/w205-manual.pdf",
       "sha256": "722e0d0d2aa199bf89f4f5c95ca44f0522b1154e744ebd01568b217fa5d5d544",
-      "printed_page_offset": 3
+      "printed_page_offset": 3,
+      "source_id": "w205-manual"
     },
     {
-      "doc_id": "w213-manual",
       "title": "Руководство по эксплуатации E-класса (W213)",
       "doc_type": "owner_manual",
       "models": [
@@ -28,10 +419,10 @@
       "source": "https://storage.yandexcloud.net/cars-main/ftp/998/models/b9f20852-84e7-4dda-95c0-2596ba20d244.pdf",
       "file": "raw/w213-manual.pdf",
       "sha256": "b387f1552ef0603eac589851fc66ed32e34abf7d842291a9def5595a8c922926",
-      "printed_page_offset": 3
+      "printed_page_offset": 3,
+      "source_id": "w213-manual"
     },
     {
-      "doc_id": "x253-manual",
       "title": "Руководство по эксплуатации GLC (X253)",
       "doc_type": "owner_manual",
       "models": [
@@ -42,7 +433,8 @@
       "source": "https://storage.yandexcloud.net/cars-main/ftp/998/models/f232665e-6c53-4ec1-965f-2759cc697873.pdf",
       "file": "raw/x253-manual.pdf",
       "sha256": "ea54c3910c41f8196954820a2476896d8e2466c942a36b9e62f9998d36acbd3c",
-      "printed_page_offset": 3
+      "printed_page_offset": 3,
+      "source_id": "x253-manual"
     }
   ]
 }

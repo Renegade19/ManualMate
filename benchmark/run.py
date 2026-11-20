@@ -1,4 +1,4 @@
-"""python -m benchmark.run --output benchmark/reports/kt2.json"""
+"""python -m benchmark.run --output benchmark/results/kt2.json"""
 
 import argparse
 import hashlib
@@ -14,6 +14,7 @@ from backend.llm.answer import GenerationError
 from backend.service import RAGService
 from backend.settings import ROOT, Settings
 from benchmark.metrics import retrieval_metrics
+from search.index import read_corpus
 
 
 def code_hash():
@@ -28,7 +29,7 @@ def code_hash():
 def run(output, retrieval_only=False):
     settings = Settings()
     service = RAGService(settings)
-    raw = (ROOT / "benchmark/queries.jsonl").read_bytes()
+    raw = (ROOT / "benchmark/questions.jsonl").read_bytes()
     queries = [json.loads(line) for line in raw.decode().splitlines() if line.strip()]
     assert len(queries) == 15 and sum(q["expected"] == "answer" for q in queries) == 10
     assert len({q["id"] for q in queries}) == 15 and service.index.n == 30
@@ -41,7 +42,7 @@ def run(output, retrieval_only=False):
         response.raise_for_status()
         model_digest = next(m["digest"] for m in response.json()["models"] if m["name"] == settings.model)
     report = {"created_at": datetime.now(timezone.utc).isoformat(), "base_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-              "code_sha256": code_hash(), "corpus_sha256": hashlib.sha256(settings.corpus.read_bytes()).hexdigest(),
+              "code_sha256": code_hash(), "corpus_sha256": hashlib.sha256(read_corpus(settings.corpus)).hexdigest(),
               "queries_sha256": hashlib.sha256(raw).hexdigest(), "mode": "retrieval_only" if retrieval_only else "ollama",
               "parameters": {"k": settings.top_k, "mrr_depth": settings.top_k, "k1": settings.k1, "b": settings.b, "min_score": settings.min_score,
                              "model": settings.model, "model_digest": model_digest, "temperature": 0, "seed": 42}, "results": []}
@@ -69,7 +70,7 @@ def run(output, retrieval_only=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ROOT / "benchmark/reports/kt2.json")
+    parser.add_argument("--output", type=Path, default=ROOT / "benchmark/results/kt2.json")
     parser.add_argument("--retrieval-only", action="store_true")
     args = parser.parse_args()
     run(args.output, args.retrieval_only)

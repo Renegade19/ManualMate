@@ -41,7 +41,7 @@ flowchart TD
 
 ## Подготовка корпуса
 
-1. PDF лежат локально в `corpus/raw/` (в Git не попадают), их список и хеши — в `corpus/manifest.json`.
+1. PDF лежат локально в `corpus/raw/` (в Git не попадают), их список и хеши — в `sources` файла `corpus/manifest.json`.
 2. `scripts/prepare_corpus.py --download` проверяет SHA-256 PDF и текстовые якоря выбранных страниц.
 3. `corpus/selection.json` содержит 30 коротких пересказов разделов. Это авторские карточки, а не дословное извлечение: `adapted: true`. Полный PDF и извлечённый текст не публикуются.
 4. Каждый фрагмент получает metadata: `chunk_id`, `doc_id`, `models`, `engines`, `section`, `page`, `text`.

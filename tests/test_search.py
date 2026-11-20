@@ -75,3 +75,15 @@ def test_index_roundtrip_stale_and_corrupt_cache(tmp_path):
     assert set(load_index(corpus, cache).documents) == {"B"}
     with pytest.raises(ValueError):
         Index(docs({"A": "масло"}) * 2)
+
+
+def test_directory_corpus_has_same_statistics_as_combined_file(tmp_path):
+    import json
+    directory = tmp_path / "documents"
+    directory.mkdir()
+    rows = docs({"D01": "масло масло", "D02": "давление шина"})
+    for row in rows:
+        (directory / f"{row['doc_id']}.jsonl").write_text(json.dumps(row) + "\n")
+    loaded = load_index(directory, tmp_path / "cache.json")
+    assert loaded.documents == Index(rows).documents
+    assert loaded.postings == Index(rows).postings

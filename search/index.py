@@ -43,8 +43,18 @@ class Index:
         return index
 
 
+def read_corpus(corpus_path):
+    path = Path(corpus_path)
+    if path.is_dir():
+        files = sorted(path.glob("D[0-9][0-9].jsonl"))
+        if not files:
+            raise ValueError("Пустой корпус")
+        return b"".join(p.read_bytes() for p in files)
+    return path.read_bytes()
+
+
 def load_index(corpus_path, cache_path):
-    raw = Path(corpus_path).read_bytes()
+    raw = read_corpus(corpus_path)
     digest = hashlib.sha256(raw).hexdigest()
     try:
         return Index.load(cache_path, digest)

@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 @dataclass(frozen=True)
 class Settings:
-    corpus: Path = ROOT / "corpus/processed/documents.jsonl"
+    corpus: Path = ROOT / "corpus/processed"
     index: Path = ROOT / ".cache/index.json"
     ollama_url: str = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
     model: str = os.getenv("OLLAMA_MODEL", "qwen2.5:7b")

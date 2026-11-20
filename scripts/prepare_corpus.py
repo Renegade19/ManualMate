@@ -19,7 +19,7 @@ def compact(text):
 def prepare(download=False, verify=True):
     manifest = json.loads((ROOT / "corpus/manifest.json").read_text())
     selection = json.loads((ROOT / "corpus/selection.json").read_text())
-    sources = {d["doc_id"]: d for d in manifest["documents"]}
+    sources = {d["source_id"]: d for d in manifest["sources"]}
     readers = {}
     for source_id, source in sources.items():
         path = ROOT / "corpus" / source["file"]
@@ -42,9 +42,10 @@ def prepare(download=False, verify=True):
                           "title": source["title"], "section": row["section"], "models": source["models"], "engines": [],
                           "page": row["pdf_page"] - source["printed_page_offset"], "pdf_page": row["pdf_page"],
                           "source_url": source["source"], "topic": row["topic"], "text": row["text"], "adapted": True})
-    path = ROOT / "corpus/processed/documents.jsonl"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("".join(json.dumps(d, ensure_ascii=False) + "\n" for d in documents), encoding="utf-8")
+    path = ROOT / "corpus/processed"
+    path.mkdir(parents=True, exist_ok=True)
+    for document in documents:
+        (path / f"{document['doc_id']}.jsonl").write_text(json.dumps(document, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"PASS: {len(sources)} PDF, {len(documents)} документов; проверка PDF: {verify}")
 
 
