@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-20T15:32:45.919318+00:00",
-  "base_commit": "2cc1a14d6088c0246f70c964e3eb5c2d813e06ea",
-  "code_sha256": "e2570fa464c339f95cae8ff5d3f098c03cc5ee0dee1e3d919f7c6d0e6e2da1fa",
+  "created_at": "2026-11-20T19:57:28.242892+00:00",
+  "base_commit": "ac72af45c3ecc056472c204e35a185335924161f",
+  "code_sha256": "a97e4cdc9c18c45377d3d79ce2fa888c6d4799a0abb503b983c8c1ce060ed3a5",
   "corpus_sha256": "a7f4c5657226b1b7364571c5b345ba453fc475da7d2c3696ba8688dbb0276e64",
   "queries_sha256": "f59e49a2b3ad99104ab8de89e0395a88daf22c3cac8a2e9701986f5bbc333dcd",
   "mode": "ollama",
@@ -163,7 +163,7 @@
           }
         ]
       },
-      "elapsed_ms": 23752.0
+      "elapsed_ms": 11350.8
     },
     {
       "id": "Q02",
@@ -310,7 +310,7 @@
           }
         ]
       },
-      "elapsed_ms": 18517.1
+      "elapsed_ms": 8439.7
     },
     {
       "id": "Q03",
@@ -417,7 +417,7 @@
           }
         ]
       },
-      "elapsed_ms": 18595.3
+      "elapsed_ms": 8370.7
     },
     {
       "id": "Q04",
@@ -546,7 +546,7 @@
           }
         ]
       },
-      "elapsed_ms": 18346.5
+      "elapsed_ms": 8482.0
     },
     {
       "id": "Q05",
@@ -677,7 +677,7 @@
           }
         ]
       },
-      "elapsed_ms": 18738.5
+      "elapsed_ms": 8515.7
     },
     {
       "id": "Q06",
@@ -787,7 +787,7 @@
           }
         ]
       },
-      "elapsed_ms": 20556.5
+      "elapsed_ms": 8155.2
     },
     {
       "id": "Q07",
@@ -920,7 +920,7 @@
           }
         ]
       },
-      "elapsed_ms": 21126.6
+      "elapsed_ms": 8506.8
     },
     {
       "id": "Q08",
@@ -1050,7 +1050,7 @@
           }
         ]
       },
-      "elapsed_ms": 15048.9
+      "elapsed_ms": 6714.5
     },
     {
       "id": "Q09",
@@ -1202,7 +1202,7 @@
           }
         ]
       },
-      "elapsed_ms": 17709.8
+      "elapsed_ms": 7841.2
     },
     {
       "id": "Q10",
@@ -1356,7 +1356,7 @@
           }
         ]
       },
-      "elapsed_ms": 21845.3
+      "elapsed_ms": 9628.9
     },
     {
       "id": "Q11",
@@ -1424,7 +1424,7 @@
           }
         ]
       },
-      "elapsed_ms": 2.1
+      "elapsed_ms": 1.2
     },
     {
       "id": "Q12",
@@ -1492,7 +1492,7 @@
           }
         ]
       },
-      "elapsed_ms": 1.8
+      "elapsed_ms": 1.2
     },
     {
       "id": "Q13",
@@ -1579,7 +1579,7 @@
           }
         ]
       },
-      "elapsed_ms": 2577.0
+      "elapsed_ms": 1234.3
     },
     {
       "id": "Q14",
@@ -1660,7 +1660,7 @@
           }
         ]
       },
-      "elapsed_ms": 2108.6
+      "elapsed_ms": 1013.9
     },
     {
       "id": "Q15",
@@ -1747,7 +1747,7 @@
           }
         ]
       },
-      "elapsed_ms": 2515.7
+      "elapsed_ms": 1222.6
     }
   ],
   "complete": true,

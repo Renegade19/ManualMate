@@ -1,6 +1,6 @@
 {
   "report": "kt2.json",
-  "report_sha256": "fa668238412be6b43b4f38ee7a852ebc2f4297654bca8fc3fe96246dc4ccc402",
+  "report_sha256": "580ac28d3216d88c62642528e7f36cef6e8295510b175cb7ad912e3f6f61ba2d",
   "metrics": {
     "Recall@5": 1.0,
     "MRR@5": 1.0,
